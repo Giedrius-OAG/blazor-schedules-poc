@@ -41,6 +41,12 @@
 </Dropdown>
 
 <div class="grid mt-1" >
+    Departure Date:
+    <InputDate @bind-Value="@departureDate" min="2019-01-01" max="2038-12-31" id="departure_date" />
+    Arrival Date: <DateInput TValue="DateOnly" @bind-Value="@arrivalDate" @bind-Value:format="yyyy-MM-dd" Placeholder="Enter Date" EnableMinMax="true" Min="@minDate" Max="@maxDate"/>
+</div>
+
+<div class="grid mt-1" >
 @if (schedules != null)
 {
     <QuickGrid Items="@FilterteredSchedules" Pagination="@pagination" Theme="corporate">
@@ -102,6 +108,10 @@ else
     private bool showArrivalAirport = true;
     private bool showDepartureTime = true;
     private bool showArrivalTime = true;
+    private DateOnly departureDate = DateOnly.FromDateTime(DateTime.Now);
+    private DateOnly arrivalDate = DateOnly.FromDateTime(DateTime.Now);
+    private DateOnly minDate = DateOnly.Parse("2019-01-01");
+    private DateOnly maxDate = DateOnly.Parse("2031-01-01");
     PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
     string flightNumberFilter = string.Empty;
 
@@ -117,23 +127,26 @@ else
         var schedulesArray = await Http.GetFromJsonAsync<AirlineSchedule[]>(requestUri);
         schedules = schedulesArray?.AsQueryable();
     }
-    
+
     private void ToggleId()
     {
         showId = !showId;
         StateHasChanged();
     }
-    
+
     IQueryable<AirlineSchedule> FilterteredSchedules
     {
         get
         {
             IQueryable<AirlineSchedule> filterteredSchedules = schedules;
 
+            filterteredSchedules = filterteredSchedules?.Where(c => DateOnly.FromDateTime(c.DepartureTime) >= departureDate)
+                                                        .Where(c => DateOnly.FromDateTime(c.ArrivalTime) <= arrivalDate);
+
             if (!string.IsNullOrEmpty(flightNumberFilter))
             {
-                filterteredSchedules = schedules?.Where(c => c.FlightNumber.Contains(flightNumberFilter, StringComparison.CurrentCultureIgnoreCase));
-            }
+                filterteredSchedules = filterteredSchedules?.Where(c => c.FlightNumber.Contains(flightNumberFilter, StringComparison.CurrentCultureIgnoreCase));
+            } 
 
             return filterteredSchedules;
         }

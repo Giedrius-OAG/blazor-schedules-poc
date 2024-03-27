@@ -49,3 +49,8 @@ h1:focus {
 .darker-border-checkbox.form-check-input {
     border-color: #929292;
 }
+
+input.form-control[type=date] {
+    width:130px;
+    display:inline;
+}

@@ -52,7 +52,7 @@ namespace Backend.Models
 
         private static (DateTime, DateTime) GenerateRandomFlightTimes(Random random)
         {
-            var departureTime = DateTime.UtcNow.AddHours(random.Next(1, 24));
+            var departureTime = DateTime.UtcNow.AddHours(random.Next(1, 48));
             var arrivalTime = departureTime.AddHours(random.Next(1, 4)); // Arrival time 1 to 3 hours after departure
             return (departureTime, arrivalTime);
         }
