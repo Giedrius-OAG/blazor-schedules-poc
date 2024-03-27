@@ -1,0 +1,4 @@
+@BlazorApp_HostAddress = https://localhost:7172
+
+GET {{BlazorApp_HostAddress}}/schedules/
+Accept: application/json
