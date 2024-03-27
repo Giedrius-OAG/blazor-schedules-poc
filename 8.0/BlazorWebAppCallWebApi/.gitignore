@@ -1,11 +1,24 @@
 # Default ignored files
 /shelf/
 /workspace.xml
+/.idea/ # JetBrains Rider project settings folder
 # Rider ignored files
 /modules.xml
-BlazorApp.iml
+*.iml
 /contentModel.xml
 /projectSettingsUpdater.xml
+# Visual Studio 2022 ignored files
+.vs/ # Visual Studio cache files
+.vscode/ # VS Code workspace files
+/bin/ # Compiled binary files
+/obj/ # Object files, temporary build files
+*.user
+*.userosscache
+*.suo
+*.userprefs
+# Build Folders
+**/wwwroot/dist/
+**/wwwroot/build/
 # Editor-based HTTP Client requests
 /httpRequests/
 # Datasource local storage ignored files
@@ -13,3 +26,17 @@ BlazorApp.iml
 /dataSources.local.xml
 # GitHub Copilot persisted chat sessions
 /copilot/chatSessions
+# NuGet Packages
+*.nupkg
+# The packages folder can be ignored if you're using PackageReference
+**/[Pp]ackages/*
+# Package Target Fallback folder
+**/$([Pp]ackage[Tt]arget[Ff]allbackFolder)/*
+# Blazor WebAssembly Build Output
+/dist/
+/bin/
+/obj/
+/publish/
+# Node.js dependencies for Blazor WebAssembly projects
+/node_modules/
+# End of list
