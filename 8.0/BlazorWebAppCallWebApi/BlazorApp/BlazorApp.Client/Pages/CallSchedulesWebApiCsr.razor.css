@@ -1,0 +1,57 @@
+/* Corporate Theme for QuickGrid Styles */
+::deep .quickgrid[theme="corporate"] {
+  width: 100vw; /* Full viewport width */
+  max-width: 100%; /* Maximum width of 100% */
+  border-collapse: collapse; /* No space between borders of table cells */
+  overflow-x: auto; /* Scroll horizontally if needed */
+  box-sizing: border-box; /* Include padding and borders in the element's total width */
+  margin: 0 auto; /* Center the grid horizontally */
+  padding: 0; /* No padding */
+  color: #333; /* Corporate color for text */
+}
+
+::deep .quickgrid[theme="corporate"] th,
+::deep .quickgrid[theme="corporate"] td {
+  border: 1px solid #ddd; /* Light gray border */
+  padding: 8px; /* Spacing inside cells */
+  text-align: left; /* Align text to the left */
+}
+
+/* Header styles for corporate theme */
+::deep .quickgrid[theme="corporate"] th {
+  background-color: rgb(255, 221, 51); /* Corporate primary color */
+  font-style: italic;
+  color: black; /* White color for text */
+}
+
+/* Row hover effect for corporate theme */
+::deep .quickgrid[theme="corporate"] tr:hover {
+  background-color: #f5f5f5; /* Light gray background on hover */
+}
+
+/* Zebra striping for rows in corporate theme */
+::deep .quickgrid[theme="corporate"] tr:nth-child(odd) {
+  background-color: #f9f9f9; /* Slightly lighter gray for odd rows */
+}
+
+/* Additional QuickGrid styles for corporate theme */
+::deep .quickgrid[theme="corporate"] .th {
+  gap: 0.4rem; /* Space between title text and sort indicator */
+  font-weight: bold; /* Bold font weight */
+  text-transform: uppercase; /* Uppercase lettering */
+}
+
+::deep .quickgrid[theme="corporate"] .sort-indicator {
+  color: #7a7a7a; /* Darker shade of corporate primary color for contrast */
+}
+
+/* Button styles for corporate theme */
+::deep .quickgrid[theme="corporate"] .button.col-title:hover,
+::deep .quickgrid[theme="corporate"] .col-options-button:hover {
+  background-color: #626262; /* Corporate secondary color for hover state */
+}
+
+::deep .quickgrid[theme="corporate"] .button.col-title:active,
+::deep .quickgrid[theme="corporate"] .col-options-button:active {
+  background-color: #ffc000; /* Corporate accent color for active state */
+}

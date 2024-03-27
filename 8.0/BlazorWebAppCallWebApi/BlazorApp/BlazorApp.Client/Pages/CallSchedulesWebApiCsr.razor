@@ -1,0 +1,172 @@
+@page "/call-schedules-web-api-csr"
+@rendermode InteractiveWebAssembly
+@using Backend.Models
+@inject PersistentComponentState ApplicationState
+@inject IConfiguration Config
+@inject HttpClient Http
+
+
+<PageTitle>Schedules</PageTitle>
+
+<h1>Schedules</h1>
+
+<Dropdown>
+    <DropdownToggleButton Color="ButtonColor.Dark">Show Columns</DropdownToggleButton>
+    <DropdownMenu>
+        <DropdownItem>
+            <input type="checkbox" id="toggleId" @bind="@showId"/>
+            <label for="toggleId">Id</label>
+        </DropdownItem>
+        <DropdownItem>
+            <input type="checkbox" id="toggleFlightNumber" @bind="@showFlightNumber"/>
+            <label for="toggleFlightNumber">Flight Number</label>
+        </DropdownItem>
+        <DropdownItem>
+            <input type="checkbox" id="toggleDepartureAirport" @bind="@showDepartureAirport"/>
+            <label for="toggleDepartureAirport">Departure Airport</label>
+        </DropdownItem>
+        <DropdownItem>
+            <input type="checkbox" id="toggleArrivalAirport" @bind="@showArrivalAirport"/>
+            <label for="toggleArrivalAirport">Arrival Airport</label>
+        </DropdownItem>
+        <DropdownItem>
+            <input type="checkbox" id="toggleDepartureTime" @bind="@showDepartureTime"/>
+            <label for="toggleDepartureTime">Departure Time</label>
+        </DropdownItem>
+        <DropdownItem>
+            <input type="checkbox" id="toggleArrivalTime" @bind="@showArrivalTime"/>
+            <label for="toggleArrivalTime">Arrival Time</label>
+        </DropdownItem>
+    </DropdownMenu>
+</Dropdown>
+
+<div class="grid mt-1" >
+@if (schedules != null)
+{
+    <QuickGrid Items="@FilterteredSchedules" Pagination="@pagination" Theme="corporate">
+        @if (showId)
+        {
+            <PropertyColumn Property="@((AirlineSchedule s) => s.Id)" Title="Id" Sortable="true"/>
+        }
+        @if (showFlightNumber)
+        {
+            <PropertyColumn Property="@((AirlineSchedule s) => s.FlightNumber)" Title="Flight Number" Sortable="true">
+                <ColumnOptions>
+                    <div class="search-box">
+                        <input type="search" autofocus @bind="flightNumberFilter" @bind:event="oninput" placeholder="Flight number..."/>
+                    </div>
+                </ColumnOptions>
+            </PropertyColumn>
+        }
+        @if (showDepartureAirport)
+        {
+            <PropertyColumn Property="@((AirlineSchedule s) => s.DepartureAirport)" Title="Departure Airport" Sortable="true"/>
+        }
+        @if (showArrivalAirport)
+        {
+            <PropertyColumn Property="@((AirlineSchedule s) => s.ArrivalAirport)" Title="Arrival Airport" Sortable="true"/>
+        }
+        @if (showDepartureTime)
+        {
+            <PropertyColumn Property="@((AirlineSchedule s) => s.DepartureTime)" Title="Departure Time" Sortable="true"/>
+        }
+        @if (showArrivalTime)
+        {
+            <PropertyColumn Property="@((AirlineSchedule s) => s.ArrivalTime)" Title="Arrival Time" Sortable="true"/>
+        }
+    </QuickGrid>
+}
+else
+{
+    <p>Loading schedules...</p>
+}
+</div>
+<div class="page-size-chooser">
+    Items per page:
+    <select @bind="@pagination.ItemsPerPage">
+        <option>5</option>
+        <option>10</option>
+        <option>20</option>
+        <option>50</option>
+    </select>
+</div>
+<Paginator State="@pagination" />
+
+@code {
+    private IQueryable<AirlineSchedule>? schedules;
+    private string? serviceEndpoint;
+    private PersistingComponentStateSubscription persistingSubscription;
+    private bool showId = true;
+    private bool showFlightNumber = true;
+    private bool showDepartureAirport = true;
+    private bool showArrivalAirport = true;
+    private bool showDepartureTime = true;
+    private bool showArrivalTime = true;
+    PaginationState pagination = new PaginationState { ItemsPerPage = 10 };
+    string flightNumberFilter = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        serviceEndpoint = $"{Config.GetValue<string>("BackendUrl")}";
+        await GetSchedules();
+    }
+
+    private async Task GetSchedules()
+    {
+        var requestUri = $"{serviceEndpoint}/schedules";
+        var schedulesArray = await Http.GetFromJsonAsync<AirlineSchedule[]>(requestUri);
+        schedules = schedulesArray?.AsQueryable();
+    }
+    
+    private void ToggleId()
+    {
+        showId = !showId;
+        StateHasChanged();
+    }
+    
+    IQueryable<AirlineSchedule> FilterteredSchedules
+    {
+        get
+        {
+            IQueryable<AirlineSchedule> filterteredSchedules = schedules;
+
+            if (!string.IsNullOrEmpty(flightNumberFilter))
+            {
+                filterteredSchedules = schedules?.Where(c => c.FlightNumber.Contains(flightNumberFilter, StringComparison.CurrentCultureIgnoreCase));
+            }
+
+            return filterteredSchedules;
+        }
+    }
+
+    
+    private void ToggleFlightNumber()
+    {
+        showFlightNumber = !showFlightNumber;
+        StateHasChanged();
+    }
+    
+    private void ToggleDepartureAirport()
+    {
+        showDepartureAirport = !showDepartureAirport;
+        StateHasChanged();
+    }
+    
+    private void ToggleArrivalAirport()
+    {
+        showArrivalAirport = !showArrivalAirport;
+        StateHasChanged();
+    }
+    
+    private void ToggleDepartureTime()
+    {
+        showDepartureTime = !showDepartureTime;
+        StateHasChanged();
+    }
+    
+    private void ToggleArrivalTime()
+    {
+        showArrivalTime = !showArrivalTime;
+        StateHasChanged();
+    }
+}

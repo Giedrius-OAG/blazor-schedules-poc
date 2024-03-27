@@ -7,13 +7,13 @@ public class SeedData
 {
     public static async Task InitializeAsync(IServiceProvider serviceProvider)
     {
-        using var context = new TodoContext(serviceProvider.GetRequiredService<DbContextOptions<TodoContext>>());
+        using var context = new AirlineScheduleContext(serviceProvider.GetRequiredService<DbContextOptions<AirlineScheduleContext>>());
 
-        context.Add(new TodoItem { Name = "Lift weights", IsComplete = true });
-        context.Add(new TodoItem { Name = "Feed Merlin", IsComplete = false });
-        context.Add(new TodoItem { Name = "Update web API article", IsComplete = true });
-        context.Add(new TodoItem { Name = "Attend Blazor party", IsComplete = false });
-
-        await context.SaveChangesAsync();
+        if (!context.AirlineSchedules.Any())
+        {
+            var schedules = BusinessDataGenerator.GenerateRandomSchedules(50);
+            context.AirlineSchedules.AddRange(schedules);
+            await context.SaveChangesAsync();
+        }
     }
 }
